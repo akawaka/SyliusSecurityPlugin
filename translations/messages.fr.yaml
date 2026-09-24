@@ -10,6 +10,27 @@ akawaka_sylius_security:
         request_password_reset: Réinitialiser le mot de passe
         password_managed_by_owner: Seul cet administrateur peut modifier son mot de passe. Vous pouvez lui envoyer l'email de réinitialisation.
     ui:
+        admin_action_logs: Actions des administrateurs
+        admin_action_log:
+            subheader: Historique des actions effectuées par les administrateurs
+            header: "Action d'administrateur n°%id%"
+            created_at: Date
+            admin: Administrateur
+            type: Type
+            context: Contexte
+            route: Route
+            route_parameters: Paramètres de route
+            method: Méthode
+            uri: URL
+            status_code: Statut HTTP
+            ip: Adresse IP
+            user_agent: User agent
+            types:
+                read: Consultation
+                write: Modification
+                login: Connexion
+                login_failure: Échec de connexion
+                logout: Déconnexion
         role:
             super_admin: Super admin
             api_access: Accès API
@@ -23,3 +44,4 @@ akawaka_sylius_security:
             marketing: Marketing
             configuration: Configuration
             administration: Administration
+            audit: Audit

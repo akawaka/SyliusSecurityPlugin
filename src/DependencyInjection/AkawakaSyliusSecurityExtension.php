@@ -34,8 +34,22 @@ final class AkawakaSyliusSecurityExtension extends AbstractResourceExtension imp
         $this->validateRoles($config['roles'], $config['super_admin_role'], $contexts);
         $container->setParameter('akawaka_sylius_security.roles', $config['roles']);
 
+        $adminActionLog = $config['admin_action_log'];
+        $container->setParameter('akawaka_sylius_security.admin_action_log.log_read_actions', $adminActionLog['log_read_actions']);
+        $container->setParameter('akawaka_sylius_security.admin_action_log.retention_days', $adminActionLog['retention_days']);
+        $container->setParameter('akawaka_sylius_security.admin_action_log.firewalls', $adminActionLog['firewalls']);
+        $container->setParameter(
+            'akawaka_sylius_security.admin_action_log.excluded_route_prefixes',
+            array_values(array_unique(array_merge(Configuration::DEFAULT_ADMIN_ACTION_LOG_EXCLUDED_ROUTE_PREFIXES, $adminActionLog['excluded_route_prefixes']))),
+        );
+
         $loader = new XmlFileLoader($container, new FileLocator(__DIR__ . '/../../config'));
         $loader->load('services.xml');
+
+        if (!$adminActionLog['enabled']) {
+            $container->removeDefinition('akawaka_sylius_security.listener.admin_action_log_request');
+            $container->removeDefinition('akawaka_sylius_security.listener.admin_action_log_security');
+        }
     }
 
     /**
@@ -69,12 +83,25 @@ final class AkawakaSyliusSecurityExtension extends AbstractResourceExtension imp
 
     public function prepend(ContainerBuilder $container): void
     {
+        $container->prependExtensionConfig('doctrine', [
+            'orm' => [
+                'mappings' => [
+                    'AkawakaSyliusSecurityPlugin' => [
+                        'type' => 'xml',
+                        'dir' => 'config/doctrine',
+                        'prefix' => 'AKAWAKA\SyliusSecurityPlugin\Entity',
+                        'is_bundle' => true,
+                    ],
+                ],
+            ],
+        ]);
+
         $this->prependDoctrineMigrations($container);
     }
 
     protected function getMigrationsNamespace(): string
     {
-        return 'DoctrineMigrations';
+        return 'AKAWAKA\SyliusSecurityPlugin\Migrations';
     }
 
     protected function getMigrationsDirectory(): string

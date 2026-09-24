@@ -27,6 +27,10 @@
 - A roles checkboxes table replaces the Sylius Plus placeholder on the administrator form.
   Only super admins can grant `ROLE_SUPER_ADMIN`; roles not managed by the plugin (`ROLE_ADMINISTRATION_ACCESS`...) are preserved.
 - Generic roles (e.g. `ROLE_API_ACCESS`) can be configured to be assigned on the administrator form too.
+- **Administrator actions history**: every page consulted and every modification made by an administrator, as well as
+  their logins, failed logins and logouts, are saved in database (date, administrator, route, context, URL, HTTP status,
+  IP, user agent). They can be browsed in "Configuration > Administrator actions" with the `ROLE_ADMIN_AUDIT_READ` role,
+  and purged with the `akawaka:security:purge-admin-action-logs` command.
 
 ## Installation
 
@@ -49,6 +53,12 @@
     akawaka_sylius_security_admin:
         resource: "@AkawakaSyliusSecurityPlugin/config/routes/admin.yaml"
         prefix: /%sylius_admin.path_name%
+    ```
+
+1. Create the administrator actions table:
+
+    ```bash
+    bin/console doctrine:migrations:migrate
     ```
 
 1. Grant the super admin role to at least one administrator, otherwise nobody can manage roles anymore:
@@ -82,6 +92,27 @@ akawaka_sylius_security:
         # add akawaka_sylius_security.ui.context.<code> to your translations
         suppliers:
             route_prefixes: [app_admin_supplier]
+    admin_action_log:
+        enabled: true
+        # false to only log modifications (non GET/HEAD requests), logins and logouts
+        log_read_actions: true
+        # default value of the purge command --days option
+        retention_days: 90
+        # read requests on these route prefixes are not logged, added to the default ones (partials, AJAX, profiler, the history itself...)
+        excluded_route_prefixes: [app_admin_autocomplete]
+        # firewalls whose failed logins are logged
+        firewalls: [admin, new_api_admin_user]
+```
+
+### Purging the administrator actions history
+
+Logs are never deleted automatically, schedule the purge command (e.g. with a daily cron):
+
+```bash
+# deletes the logs older than admin_action_log.retention_days (90 by default)
+bin/console akawaka:security:purge-admin-action-logs
+# or older than a given number of days
+bin/console akawaka:security:purge-admin-action-logs --days=30
 ```
 
 ### Limitations

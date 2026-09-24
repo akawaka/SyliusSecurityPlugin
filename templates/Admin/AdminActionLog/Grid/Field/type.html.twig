@@ -1,0 +1,2 @@
+{% set colors = {read: 'grey', write: 'orange', login: 'green', login_failure: 'red', logout: 'olive'} %}
+<span class="ui {{ colors[data]|default('grey') }} label">{{ ('akawaka_sylius_security.ui.admin_action_log.types.' ~ data)|trans }}</span>

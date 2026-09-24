@@ -1,0 +1,88 @@
+{% extends '@SyliusAdmin/layout.html.twig' %}
+
+{% import '@SyliusAdmin/Macro/breadcrumb.html.twig' as breadcrumb %}
+
+{% set log = resource %}
+{% set prefix = 'akawaka_sylius_security.ui.admin_action_log.' %}
+
+{% block title %}{{ 'akawaka_sylius_security.ui.admin_action_log.header'|trans({'%id%': log.id}) }} {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="ui stackable two column grid">
+        <div class="column">
+            <h1 class="ui header">
+                <i class="circular history icon"></i>
+                <div class="content">
+                    {{ 'akawaka_sylius_security.ui.admin_action_log.header'|trans({'%id%': log.id}) }}
+                    <div class="sub header">{{ log.createdAt|date('d-m-Y H:i:s') }}</div>
+                </div>
+            </h1>
+            {{ breadcrumb.crumble([
+                { label: 'sylius.ui.administration'|trans, url: path('sylius_admin_dashboard') },
+                { label: 'akawaka_sylius_security.ui.admin_action_logs'|trans, url: path('akawaka_sylius_security_admin_admin_action_log_index') },
+                { label: '#' ~ log.id },
+            ]) }}
+        </div>
+    </div>
+
+    <div class="ui segment" id="akawaka-admin-action-log">
+        <table class="ui very basic celled definition table">
+            <tbody>
+                <tr>
+                    <td class="four wide">{{ (prefix ~ 'created_at')|trans }}</td>
+                    <td>{{ log.createdAt|date('d-m-Y H:i:s') }}</td>
+                </tr>
+                <tr>
+                    <td>{{ (prefix ~ 'type')|trans }}</td>
+                    <td>{% include '@AkawakaSyliusSecurityPlugin/Admin/AdminActionLog/Grid/Field/type.html.twig' with {data: log.type} only %}</td>
+                </tr>
+                <tr>
+                    <td>{{ (prefix ~ 'admin')|trans }}</td>
+                    <td>
+                        {% if log.adminUser is not null %}
+                            <a href="{{ path('sylius_admin_admin_user_update', {id: log.adminUser.id}) }}">{{ log.adminEmail }}</a>
+                        {% else %}
+                            {{ log.adminEmail }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{ (prefix ~ 'context')|trans }}</td>
+                    <td>{% include '@AkawakaSyliusSecurityPlugin/Admin/AdminActionLog/Grid/Field/context.html.twig' with {data: log.context} only %}</td>
+                </tr>
+                <tr>
+                    <td>{{ (prefix ~ 'route')|trans }}</td>
+                    <td><code>{{ log.route }}</code></td>
+                </tr>
+                <tr>
+                    <td>{{ (prefix ~ 'route_parameters')|trans }}</td>
+                    <td>
+                        {% for name, value in log.routeParameters %}
+                            <div><code>{{ name }}</code>: {{ value is iterable ? value|json_encode : value }}</div>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>{{ (prefix ~ 'method')|trans }}</td>
+                    <td>{{ log.method }}</td>
+                </tr>
+                <tr>
+                    <td>{{ (prefix ~ 'uri')|trans }}</td>
+                    <td style="word-break: break-all;"><code>{{ log.uri }}</code></td>
+                </tr>
+                <tr>
+                    <td>{{ (prefix ~ 'status_code')|trans }}</td>
+                    <td>{{ log.statusCode }}</td>
+                </tr>
+                <tr>
+                    <td>{{ (prefix ~ 'ip')|trans }}</td>
+                    <td>{{ log.ip }}</td>
+                </tr>
+                <tr>
+                    <td>{{ (prefix ~ 'user_agent')|trans }}</td>
+                    <td>{{ log.userAgent }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

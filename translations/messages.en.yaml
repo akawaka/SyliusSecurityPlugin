@@ -10,6 +10,27 @@ akawaka_sylius_security:
         request_password_reset: Reset password
         password_managed_by_owner: Only this administrator can change their password. You can send them the password reset email.
     ui:
+        admin_action_logs: Administrator actions
+        admin_action_log:
+            subheader: History of the actions made by the administrators
+            header: "Administrator action #%id%"
+            created_at: Date
+            admin: Administrator
+            type: Type
+            context: Context
+            route: Route
+            route_parameters: Route parameters
+            method: Method
+            uri: URL
+            status_code: HTTP status
+            ip: IP address
+            user_agent: User agent
+            types:
+                read: Read
+                write: Write
+                login: Login
+                login_failure: Failed login
+                logout: Logout
         role:
             super_admin: Super admin
             api_access: API access
@@ -23,3 +44,4 @@ akawaka_sylius_security:
             marketing: Marketing
             configuration: Configuration
             administration: Administration
+            audit: Audit

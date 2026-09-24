@@ -78,6 +78,24 @@ final class Configuration implements ConfigurationInterface
                 'akawaka_sylius_security_admin_admin_user',
             ],
         ],
+        'audit' => [
+            'route_prefixes' => [
+                'akawaka_sylius_security_admin_admin_action_log',
+            ],
+        ],
+    ];
+
+    /** Read requests on these routes are not logged, they are not administrator actions */
+    public const DEFAULT_ADMIN_ACTION_LOG_EXCLUDED_ROUTE_PREFIXES = [
+        '_wdt',
+        '_profiler',
+        'liip_imagine',
+        'sylius_admin_partial_',
+        'sylius_admin_ajax_',
+        'sylius_admin_get_',
+        'sylius_admin_render_',
+        'sylius_admin_dashboard_statistics',
+        'akawaka_sylius_security_admin_admin_action_log',
     ];
 
     public function getConfigTreeBuilder(): TreeBuilder
@@ -118,6 +136,31 @@ final class Configuration implements ConfigurationInterface
         ;
         $context->children()->arrayNode('route_prefixes')
             ->requiresAtLeastOneElement()
+            ->scalarPrototype()
+        ;
+
+        $adminActionLog = $children->arrayNode('admin_action_log')
+            ->info('Logs the administrators actions in database.')
+            ->addDefaultsIfNotSet()
+            ->children()
+        ;
+        $adminActionLog->booleanNode('enabled')->defaultTrue();
+        $adminActionLog->booleanNode('log_read_actions')
+            ->info('Also log the pages administrators consult (GET/HEAD requests), not only their modifications.')
+            ->defaultTrue()
+        ;
+        $adminActionLog->integerNode('retention_days')
+            ->info('Default number of days kept by the akawaka:security:purge-admin-action-logs command.')
+            ->defaultValue(90)
+            ->min(1)
+        ;
+        $adminActionLog->arrayNode('excluded_route_prefixes')
+            ->info('Route prefixes whose read requests are not logged, added to the default ones.')
+            ->scalarPrototype()
+        ;
+        $adminActionLog->arrayNode('firewalls')
+            ->info('Firewalls whose failed logins are logged.')
+            ->defaultValue(['admin', 'new_api_admin_user'])
             ->scalarPrototype()
         ;
 

@@ -14,5 +14,14 @@
             <argument type="service" id="sylius.repository.admin_user" />
             <argument type="service" id="sylius.manager.admin_user" />
         </service>
+
+        <service id="akawaka_sylius_security.behat.context.ui.admin.admin_action_log" class="Tests\AKAWAKA\SyliusSecurityPlugin\Behat\Context\Ui\Admin\AdminActionLogContext">
+            <argument type="service" id="behat.mink.default_session" />
+            <argument type="service" id="behat.mink.parameters" />
+            <argument type="service" id="router" />
+            <argument type="service" id="akawaka_sylius_security.repository.admin_action_log" />
+            <argument type="service" id="akawaka_sylius_security.factory.admin_action_log" />
+            <argument type="service" id="akawaka_sylius_security.command.purge_admin_action_logs" />
+        </service>
     </services>
 </container>

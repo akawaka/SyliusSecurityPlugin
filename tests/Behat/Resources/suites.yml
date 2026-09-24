@@ -16,3 +16,18 @@ default:
 
             filters:
                 tags: "@admin_context_access&&@ui"
+
+        ui_admin_action_log:
+            contexts:
+                - sylius.behat.context.hook.doctrine_orm
+                - sylius.behat.context.hook.session
+
+                - sylius.behat.context.transform.shared_storage
+
+                - sylius.behat.context.setup.channel
+
+                - akawaka_sylius_security.behat.context.ui.admin.admin_context_access
+                - akawaka_sylius_security.behat.context.ui.admin.admin_action_log
+
+            filters:
+                tags: "@admin_action_log&&@ui"

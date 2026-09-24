@@ -82,5 +82,50 @@
             <argument>%akawaka_sylius_security.super_admin_role%</argument>
             <tag name="console.command" />
         </service>
+
+        <service id="akawaka_sylius_security.custom_factory.admin_action_log" class="AKAWAKA\SyliusSecurityPlugin\AdminActionLog\AdminActionLogFactory" decorates="akawaka_sylius_security.factory.admin_action_log">
+            <argument type="service" id=".inner" />
+            <argument type="service" id="akawaka_sylius_security.admin_context_registry" />
+            <argument type="service" id="clock" />
+        </service>
+        <service id="AKAWAKA\SyliusSecurityPlugin\AdminActionLog\AdminActionLogFactoryInterface" alias="akawaka_sylius_security.factory.admin_action_log" />
+
+        <service id="akawaka_sylius_security.admin_action_log_writer" class="AKAWAKA\SyliusSecurityPlugin\AdminActionLog\AdminActionLogWriter">
+            <argument type="service" id="akawaka_sylius_security.manager.admin_action_log" />
+            <argument type="service" id="logger" />
+            <tag name="monolog.logger" channel="security" />
+        </service>
+        <service id="AKAWAKA\SyliusSecurityPlugin\AdminActionLog\AdminActionLogWriterInterface" alias="akawaka_sylius_security.admin_action_log_writer" />
+
+        <!-- Runs late so the final status code is known -->
+        <service id="akawaka_sylius_security.listener.admin_action_log_request" class="AKAWAKA\SyliusSecurityPlugin\EventListener\AdminActionLogRequestListener">
+            <argument type="service" id="security.token_storage" />
+            <argument type="service" id="akawaka_sylius_security.factory.admin_action_log" />
+            <argument type="service" id="akawaka_sylius_security.admin_action_log_writer" />
+            <argument>%akawaka_sylius_security.admin_action_log.log_read_actions%</argument>
+            <argument>%akawaka_sylius_security.admin_action_log.excluded_route_prefixes%</argument>
+            <tag name="kernel.event_listener" event="kernel.response" priority="-512" />
+        </service>
+
+        <!-- Security events listened on the global dispatcher are dispatched for every firewall -->
+        <service id="akawaka_sylius_security.listener.admin_action_log_security" class="AKAWAKA\SyliusSecurityPlugin\EventListener\AdminActionLogSecurityListener">
+            <argument type="service" id="akawaka_sylius_security.factory.admin_action_log" />
+            <argument type="service" id="akawaka_sylius_security.admin_action_log_writer" />
+            <argument>%akawaka_sylius_security.admin_action_log.firewalls%</argument>
+            <tag name="kernel.event_listener" event="Symfony\Component\Security\Http\Event\LoginSuccessEvent" method="onLoginSuccess" />
+            <tag name="kernel.event_listener" event="Symfony\Component\Security\Http\Event\LoginFailureEvent" method="onLoginFailure" />
+            <tag name="kernel.event_listener" event="Symfony\Component\Security\Http\Event\LogoutEvent" method="onLogout" />
+        </service>
+
+        <service id="akawaka_sylius_security.listener.admin_action_log_menu" class="AKAWAKA\SyliusSecurityPlugin\Menu\AdminActionLogMenuListener">
+            <tag name="kernel.event_listener" event="sylius.menu.admin.main" />
+        </service>
+
+        <service id="akawaka_sylius_security.command.purge_admin_action_logs" class="AKAWAKA\SyliusSecurityPlugin\Command\PurgeAdminActionLogsCommand">
+            <argument type="service" id="akawaka_sylius_security.repository.admin_action_log" />
+            <argument type="service" id="clock" />
+            <argument>%akawaka_sylius_security.admin_action_log.retention_days%</argument>
+            <tag name="console.command" />
+        </service>
     </services>
 </container>

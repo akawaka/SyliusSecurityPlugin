@@ -13,3 +13,97 @@ sylius_ui:
                 request_password_reset_form:
                     template: '@AkawakaSyliusSecurityPlugin/Admin/AdminUser/Update/_requestPasswordResetForm.html.twig'
                     priority: 7
+
+sylius_resource:
+    resources:
+        akawaka_sylius_security.admin_action_log:
+            driver: doctrine/orm
+            classes:
+                model: AKAWAKA\SyliusSecurityPlugin\Entity\AdminActionLog
+                interface: AKAWAKA\SyliusSecurityPlugin\Entity\AdminActionLogInterface
+                repository: AKAWAKA\SyliusSecurityPlugin\Repository\AdminActionLogRepository
+
+sylius_grid:
+    grids:
+        akawaka_sylius_security_admin_admin_action_log:
+            driver:
+                name: doctrine/orm
+                options:
+                    class: "%akawaka_sylius_security.model.admin_action_log.class%"
+            sorting:
+                createdAt: desc
+            limits: [20, 50, 100]
+            fields:
+                createdAt:
+                    type: datetime
+                    label: akawaka_sylius_security.ui.admin_action_log.created_at
+                    sortable: ~
+                    options:
+                        format: d-m-Y H:i:s
+                adminEmail:
+                    type: string
+                    label: akawaka_sylius_security.ui.admin_action_log.admin
+                    sortable: ~
+                type:
+                    type: twig
+                    label: akawaka_sylius_security.ui.admin_action_log.type
+                    sortable: ~
+                    options:
+                        template: '@AkawakaSyliusSecurityPlugin/Admin/AdminActionLog/Grid/Field/type.html.twig'
+                context:
+                    type: twig
+                    label: akawaka_sylius_security.ui.admin_action_log.context
+                    sortable: ~
+                    options:
+                        template: '@AkawakaSyliusSecurityPlugin/Admin/AdminActionLog/Grid/Field/context.html.twig'
+                route:
+                    type: string
+                    label: akawaka_sylius_security.ui.admin_action_log.route
+                    sortable: ~
+                method:
+                    type: string
+                    label: akawaka_sylius_security.ui.admin_action_log.method
+                statusCode:
+                    type: string
+                    label: akawaka_sylius_security.ui.admin_action_log.status_code
+                ip:
+                    type: string
+                    label: akawaka_sylius_security.ui.admin_action_log.ip
+            filters:
+                createdAt:
+                    type: date
+                    label: akawaka_sylius_security.ui.admin_action_log.created_at
+                adminEmail:
+                    type: string
+                    label: akawaka_sylius_security.ui.admin_action_log.admin
+                    options:
+                        fields: [adminEmail]
+                type:
+                    type: select
+                    label: akawaka_sylius_security.ui.admin_action_log.type
+                    form_options:
+                        choices:
+                            akawaka_sylius_security.ui.admin_action_log.types.read: read
+                            akawaka_sylius_security.ui.admin_action_log.types.write: write
+                            akawaka_sylius_security.ui.admin_action_log.types.login: login
+                            akawaka_sylius_security.ui.admin_action_log.types.login_failure: login_failure
+                            akawaka_sylius_security.ui.admin_action_log.types.logout: logout
+                context:
+                    type: string
+                    label: akawaka_sylius_security.ui.admin_action_log.context
+                    options:
+                        fields: [context]
+                route:
+                    type: string
+                    label: akawaka_sylius_security.ui.admin_action_log.route
+                    options:
+                        fields: [route, uri]
+                ip:
+                    type: string
+                    label: akawaka_sylius_security.ui.admin_action_log.ip
+                    options:
+                        fields: [ip]
+            actions:
+                item:
+                    show:
+                        type: show
