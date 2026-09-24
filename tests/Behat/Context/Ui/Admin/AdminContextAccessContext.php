@@ -130,6 +130,44 @@ final class AdminContextAccessContext implements Context
     }
 
     /**
+     * @When I request a password reset for this administrator
+     */
+    public function iRequestAPasswordResetForThisAdministrator(): void
+    {
+        $this->session->getPage()->pressButton('akawaka-request-password-reset-button');
+    }
+
+    /**
+     * @Then I should be able to change the password
+     */
+    public function iShouldBeAbleToChangeThePassword(): void
+    {
+        Assert::notNull($this->session->getPage()->findField('sylius_admin_user_plainPassword'));
+        Assert::null($this->session->getPage()->findButton('akawaka-request-password-reset-button'));
+    }
+
+    /**
+     * @Then I should not be able to change the password but only request a reset
+     */
+    public function iShouldNotBeAbleToChangeThePasswordButOnlyRequestAReset(): void
+    {
+        Assert::same($this->session->getStatusCode(), 200);
+        Assert::null($this->session->getPage()->findField('sylius_admin_user_plainPassword'));
+        Assert::notNull($this->session->getPage()->findButton('akawaka-request-password-reset-button'));
+    }
+
+    /**
+     * @Then I should be notified that the password reset email has been sent
+     */
+    public function iShouldBeNotifiedThatThePasswordResetEmailHasBeenSent(): void
+    {
+        Assert::contains(
+            (string) $this->session->getPage()->find('css', '.sylius-flash-message')?->getText(),
+            'The password reset email has been sent.',
+        );
+    }
+
+    /**
      * @When I assign the :roles roles to the administrator :email
      */
     public function iAssignTheRolesToTheAdministrator(string $roles, string $email): void

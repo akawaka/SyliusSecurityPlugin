@@ -1,4 +1,7 @@
 akawaka_sylius_security:
+    admin_user:
+        request_password_reset: Reset password
+        password_managed_by_owner: Only this administrator can change their password. You can send them the password reset email.
     ui:
         role:
             super_admin: Super admin

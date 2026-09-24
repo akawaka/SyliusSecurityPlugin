@@ -4,10 +4,13 @@ default:
             contexts:
                 - sylius.behat.context.hook.doctrine_orm
                 - sylius.behat.context.hook.session
+                - sylius.behat.context.hook.mailer
 
                 - sylius.behat.context.transform.shared_storage
 
                 - sylius.behat.context.setup.channel
+
+                - sylius.behat.context.ui.email
 
                 - akawaka_sylius_security.behat.context.ui.admin.admin_context_access
 

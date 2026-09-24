@@ -1,0 +1,7 @@
+akawaka_sylius_security_admin_admin_user_request_password_reset:
+    path: /users/{id}/request-password-reset
+    methods: [POST]
+    requirements:
+        id: \d+
+    defaults:
+        _controller: akawaka_sylius_security.controller.request_admin_user_password_reset

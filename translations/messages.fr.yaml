@@ -1,4 +1,7 @@
 akawaka_sylius_security:
+    admin_user:
+        request_password_reset: Réinitialiser le mot de passe
+        password_managed_by_owner: Seul cet administrateur peut modifier son mot de passe. Vous pouvez lui envoyer l'email de réinitialisation.
     ui:
         role:
             super_admin: Super admin

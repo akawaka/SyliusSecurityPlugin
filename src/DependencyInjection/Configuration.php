@@ -75,6 +75,7 @@ final class Configuration implements ConfigurationInterface
         'administration' => [
             'route_prefixes' => [
                 'sylius_admin_admin_user',
+                'akawaka_sylius_security_admin_admin_user',
             ],
         ],
     ];

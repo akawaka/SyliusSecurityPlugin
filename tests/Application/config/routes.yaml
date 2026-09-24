@@ -1,1 +1,3 @@
-# Plugin routes are imported here when needed
+akawaka_sylius_security_admin:
+    resource: "@AkawakaSyliusSecurityPlugin/config/routes/admin.yaml"
+    prefix: /admin

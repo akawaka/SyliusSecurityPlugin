@@ -20,6 +20,8 @@
 - **Deny by default**: an administrator without any context role only reaches the dashboard.
 - Every administrator can still edit their own account ("My account"), without being able to change their own roles
   unless they have write access to the Administration context.
+- Administrators can only change their own password: on another administrator's form, the password field is replaced
+  by a "Reset password" button sending them the Sylius password reset email.
 - Main menu entries the administrator cannot access are hidden.
 - A roles multi-select replaces the Sylius Plus placeholder on the administrator form.
   Only super admins can grant `ROLE_SUPER_ADMIN`; roles not managed by the plugin (`ROLE_API_ACCESS`...) are preserved.
@@ -37,6 +39,14 @@
     ```yaml
     imports:
         - { resource: "@AkawakaSyliusSecurityPlugin/config/config.yaml" }
+    ```
+
+1. Import the plugin admin routes (`config/routes/akawaka_sylius_security.yaml`):
+
+    ```yaml
+    akawaka_sylius_security_admin:
+        resource: "@AkawakaSyliusSecurityPlugin/config/routes/admin.yaml"
+        prefix: /%sylius_admin.path_name%
     ```
 
 1. Grant the super admin role to at least one administrator, otherwise nobody can manage roles anymore:

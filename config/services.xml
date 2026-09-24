@@ -57,6 +57,18 @@
             <tag name="form.type_extension" />
         </service>
 
+        <service id="akawaka_sylius_security.form.extension.admin_user_password" class="AKAWAKA\SyliusSecurityPlugin\Form\Extension\AdminUserPasswordTypeExtension">
+            <argument type="service" id="security.token_storage" />
+            <tag name="form.type_extension" />
+        </service>
+
+        <service id="akawaka_sylius_security.controller.request_admin_user_password_reset" class="AKAWAKA\SyliusSecurityPlugin\Controller\RequestAdminUserPasswordResetAction" public="true">
+            <argument type="service" id="sylius.repository.admin_user" />
+            <argument type="service" id="sylius.command_bus" />
+            <argument type="service" id="security.csrf.token_manager" />
+            <argument type="service" id="router" />
+        </service>
+
         <service id="akawaka_sylius_security.command.grant_super_admin" class="AKAWAKA\SyliusSecurityPlugin\Command\GrantSuperAdminCommand">
             <argument type="service" id="sylius.repository.admin_user" />
             <argument type="service" id="sylius.manager.admin_user" />
