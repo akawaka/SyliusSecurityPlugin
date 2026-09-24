@@ -24,8 +24,9 @@
   by a "Reset password" button sending them the Sylius password reset email.
 - Main menu entries the administrator cannot access are hidden.
 - The Sylius Plus "Administration > Roles" menu placeholder is removed.
-- A roles multi-select replaces the Sylius Plus placeholder on the administrator form.
-  Only super admins can grant `ROLE_SUPER_ADMIN`; roles not managed by the plugin (`ROLE_API_ACCESS`...) are preserved.
+- A roles checkboxes table replaces the Sylius Plus placeholder on the administrator form.
+  Only super admins can grant `ROLE_SUPER_ADMIN`; roles not managed by the plugin (`ROLE_ADMINISTRATION_ACCESS`...) are preserved.
+- Generic roles (e.g. `ROLE_API_ACCESS`) can be configured to be assigned on the administrator form too.
 
 ## Installation
 
@@ -70,6 +71,10 @@ akawaka_sylius_security:
     # GET/HEAD requests on matching routes only require the READ role
     read_route_pattern: '/_(index|show|history|statistics)$/'
     public_route_prefixes: [app_admin_help]
+    # generic roles displayed below "Super admin" on the administrator form, as role => label (translation key or text);
+    # ROLE_ADMINISTRATION_ACCESS, the super admin role and context roles cannot be configured here
+    roles:
+        ROLE_API_ACCESS: akawaka_sylius_security.ui.role.api_access
     contexts:
         catalog:
             route_prefixes: [sylius_admin_product, sylius_admin_taxon, sylius_admin_inventory, app_admin_brand]

@@ -49,6 +49,14 @@ Feature: Restricting the administration contexts by roles
         Then the administrator "john@example.com" should have the "ROLE_ADMIN_CATALOG_WRITE, ROLE_ADMIN_SALES_READ, ROLE_API_ACCESS" roles
 
     @ui
+    Scenario: Managing a generic role configured in the plugin
+        Given I am logged in as an administrator with the "ROLE_ADMIN_ADMINISTRATION_WRITE" roles
+        And there is an administrator "john@example.com" with the "ROLE_API_ACCESS, ROLE_ADMIN_SALES_READ" roles
+        When I remove the "ROLE_API_ACCESS" roles from the administrator "john@example.com"
+        Then the administrator "john@example.com" should not have the "ROLE_API_ACCESS" roles
+        And the administrator "john@example.com" should have the "ROLE_ADMIN_SALES_READ, ROLE_ADMINISTRATION_ACCESS" roles
+
+    @ui
     Scenario: An administrator without context role can still edit their own account
         Given I am logged in as an administrator with no context role
         When I open my account page

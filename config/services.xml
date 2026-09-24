@@ -25,6 +25,7 @@
             <argument type="service" id="akawaka_sylius_security.admin_context_registry" />
             <argument type="service" id="akawaka_sylius_security.admin_context_access_checker" />
             <argument>%akawaka_sylius_security.super_admin_role%</argument>
+            <argument>%akawaka_sylius_security.roles%</argument>
         </service>
         <service id="AKAWAKA\SyliusSecurityPlugin\Security\AdminRoleChoicesProviderInterface" alias="akawaka_sylius_security.admin_role_choices_provider" />
 

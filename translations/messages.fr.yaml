@@ -12,6 +12,7 @@ akawaka_sylius_security:
     ui:
         role:
             super_admin: Super admin
+            api_access: Accès API
             read: Lecture
             write: Écriture
         write_implies_read: Le rôle Écriture donne aussi l'accès en lecture. Sans aucun rôle, l'administrateur n'accède qu'au tableau de bord et à son propre compte.

@@ -1,0 +1,3 @@
+akawaka_sylius_security:
+    roles:
+        ROLE_API_ACCESS: akawaka_sylius_security.ui.role.api_access

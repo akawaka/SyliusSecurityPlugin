@@ -187,6 +187,40 @@ final class AdminContextAccessContext implements Context
     }
 
     /**
+     * @When I remove the :roles roles from the administrator :email
+     */
+    public function iRemoveTheRolesFromTheAdministrator(string $roles, string $email): void
+    {
+        $adminUser = $this->adminUserRepository->findOneByEmail($email);
+        Assert::isInstanceOf($adminUser, AdminUserInterface::class);
+
+        $this->visit('sylius_admin_admin_user_update', ['id' => $adminUser->getId()]);
+
+        $page = $this->session->getPage();
+        foreach ($this->parseRoles($roles) as $role) {
+            $checkbox = $page->find('css', sprintf('input[name="sylius_admin_user[securityRoles][]"][value="%s"]', $role));
+            Assert::notNull($checkbox, sprintf('The "%s" role checkbox should be displayed.', $role));
+            Assert::true($checkbox->isChecked(), sprintf('The "%s" role checkbox should be checked.', $role));
+            $checkbox->uncheck();
+        }
+        $page->pressButton('sylius_save_changes_button');
+    }
+
+    /**
+     * @Then the administrator :email should not have the :roles roles
+     */
+    public function theAdministratorShouldNotHaveTheRoles(string $email, string $roles): void
+    {
+        $adminUser = $this->adminUserRepository->findOneByEmail($email);
+        Assert::isInstanceOf($adminUser, AdminUserInterface::class);
+        $this->adminUserManager->refresh($adminUser);
+
+        foreach ($this->parseRoles($roles) as $role) {
+            Assert::false($adminUser->hasRole($role), sprintf('Administrator "%s" should not have the "%s" role.', $email, $role));
+        }
+    }
+
+    /**
      * @Then I should be granted access
      */
     public function iShouldBeGrantedAccess(): void

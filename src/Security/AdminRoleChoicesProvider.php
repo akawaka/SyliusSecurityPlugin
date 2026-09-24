@@ -8,10 +8,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class AdminRoleChoicesProvider implements AdminRoleChoicesProviderInterface
 {
+    /** @param array<string, string> $roles Generic roles, as role => label */
     public function __construct(
         private readonly AdminContextRegistryInterface $contextRegistry,
         private readonly AdminContextAccessCheckerInterface $contextAccessChecker,
         private readonly string $superAdminRole,
+        private readonly array $roles = [],
     ) {
     }
 
@@ -22,6 +24,10 @@ final class AdminRoleChoicesProvider implements AdminRoleChoicesProviderInterfac
         // Only a super admin can grant super admin, to prevent privilege escalation
         if (null !== $grantor && $this->contextAccessChecker->isSuperAdmin($grantor)) {
             $choices['akawaka_sylius_security.ui.role.super_admin'] = $this->superAdminRole;
+        }
+
+        foreach ($this->roles as $role => $label) {
+            $choices[$label] = $role;
         }
 
         foreach ($this->contextRegistry->all() as $code => $context) {

@@ -103,6 +103,14 @@ final class Configuration implements ConfigurationInterface
             ->scalarPrototype()
         ;
 
+        $children->arrayNode('roles')
+            ->info('Generic roles assignable on the administrator form, as role => label (translation key or text).')
+            ->example(['ROLE_API_ACCESS' => 'akawaka_sylius_security.ui.role.api_access'])
+            ->useAttributeAsKey('role')
+            ->normalizeKeys(false)
+            ->scalarPrototype()->cannotBeEmpty()
+        ;
+
         $context = $children->arrayNode('contexts')
             ->info('Admin contexts merged with the default ones by code. The longest matching route prefix (public prefixes included) wins.')
             ->useAttributeAsKey('code')
