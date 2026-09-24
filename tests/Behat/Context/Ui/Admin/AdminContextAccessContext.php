@@ -222,7 +222,7 @@ final class AdminContextAccessContext implements Context
             static fn (NodeElement $header): string => trim($header->getText()),
             $this->session->getPage()->findAll('css', '.admin-layout__sidebar .header'),
         );
-        $headers = array_values(array_diff($headers, ['Official support', 'Administration']));
+        $headers = array_values(array_diff($headers, ['Official support']));
 
         Assert::same($headers, '' === $sections ? [] : array_map('trim', explode(',', $sections)));
     }

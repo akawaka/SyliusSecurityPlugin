@@ -38,6 +38,10 @@
             <tag name="kernel.event_listener" event="kernel.request" priority="0" />
         </service>
 
+        <service id="akawaka_sylius_security.listener.sylius_plus_roles_placeholder_menu" class="AKAWAKA\SyliusSecurityPlugin\Menu\SyliusPlusRolesPlaceholderMenuListener">
+            <tag name="kernel.event_listener" event="sylius.menu.admin.main" />
+        </service>
+
         <service id="akawaka_sylius_security.listener.own_account_update_redirect" class="AKAWAKA\SyliusSecurityPlugin\EventListener\OwnAccountUpdateRedirectListener">
             <argument type="service" id="security.token_storage" />
             <argument type="service" id="akawaka_sylius_security.admin_route_access_checker" />

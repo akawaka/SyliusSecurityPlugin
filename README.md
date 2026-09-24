@@ -23,6 +23,7 @@
 - Administrators can only change their own password: on another administrator's form, the password field is replaced
   by a "Reset password" button sending them the Sylius password reset email.
 - Main menu entries the administrator cannot access are hidden.
+- The Sylius Plus "Administration > Roles" menu placeholder is removed.
 - A roles multi-select replaces the Sylius Plus placeholder on the administrator form.
   Only super admins can grant `ROLE_SUPER_ADMIN`; roles not managed by the plugin (`ROLE_API_ACCESS`...) are preserved.
 
