@@ -32,6 +32,8 @@
         <service id="akawaka_sylius_security.listener.admin_context_access" class="AKAWAKA\SyliusSecurityPlugin\EventListener\AdminContextAccessListener">
             <argument type="service" id="security.token_storage" />
             <argument type="service" id="akawaka_sylius_security.admin_route_access_checker" />
+            <argument type="service" id="akawaka_sylius_security.admin_context_registry" />
+            <argument type="service" id="twig" />
             <argument>%akawaka_sylius_security.read_route_pattern%</argument>
             <tag name="kernel.event_listener" event="kernel.request" priority="0" />
         </service>

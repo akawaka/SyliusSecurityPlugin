@@ -1,4 +1,11 @@
 akawaka_sylius_security:
+    access_denied:
+        title: Access denied
+        read: "You are not allowed to access the %context% section."
+        write: "You can only view the %context% section, modifying it is not allowed."
+        super_admin_only: This page is reserved to super administrators.
+        contact: If you need this access, ask an super administrator to update your roles.
+        back_to_dashboard: Back to the dashboard
     admin_user:
         request_password_reset: Reset password
         password_managed_by_owner: Only this administrator can change their password. You can send them the password reset email.

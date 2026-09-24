@@ -1,0 +1,28 @@
+{% extends '@SyliusAdmin/layout.html.twig' %}
+
+{% block title %}{{ 'akawaka_sylius_security.access_denied.title'|trans }} {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="ui placeholder segment" id="akawaka-access-denied">
+        <div class="ui icon header">
+            <i class="lock icon"></i>
+            {{ 'akawaka_sylius_security.access_denied.title'|trans }}
+            <div class="sub header">
+                {% if context is null %}
+                    {{ 'akawaka_sylius_security.access_denied.super_admin_only'|trans }}
+                {% else %}
+                    {{ (can_read ? 'akawaka_sylius_security.access_denied.write' : 'akawaka_sylius_security.access_denied.read')|trans({
+                        '%context%': ('akawaka_sylius_security.ui.context.' ~ context.code)|trans,
+                    }) }}
+                {% endif %}
+            </div>
+        </div>
+        <p class="ui center aligned basic segment">{{ 'akawaka_sylius_security.access_denied.contact'|trans }}</p>
+        <div class="inline">
+            <a href="{{ path('sylius_admin_dashboard') }}" class="ui primary labeled icon button">
+                <i class="home icon"></i>
+                {{ 'akawaka_sylius_security.access_denied.back_to_dashboard'|trans }}
+            </a>
+        </div>
+    </div>
+{% endblock %}

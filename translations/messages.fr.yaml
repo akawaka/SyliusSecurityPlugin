@@ -1,4 +1,11 @@
 akawaka_sylius_security:
+    access_denied:
+        title: Accès refusé
+        read: "Vous n'avez pas accès à la section %context%."
+        write: "Vous pouvez uniquement consulter la section %context%, sa modification ne vous est pas autorisée."
+        super_admin_only: Cette page est réservée aux super administrateurs.
+        contact: Si vous avez besoin de cet accès, demandez à un super administrateur de mettre à jour vos rôles.
+        back_to_dashboard: Retour au tableau de bord
     admin_user:
         request_password_reset: Réinitialiser le mot de passe
         password_managed_by_owner: Seul cet administrateur peut modifier son mot de passe. Vous pouvez lui envoyer l'email de réinitialisation.

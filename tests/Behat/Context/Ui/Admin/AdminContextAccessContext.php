@@ -203,6 +203,15 @@ final class AdminContextAccessContext implements Context
     }
 
     /**
+     * @Then I should be told that :message
+     */
+    public function iShouldBeToldThat(string $message): void
+    {
+        Assert::same($this->session->getStatusCode(), 403);
+        Assert::contains((string) $this->session->getPage()->find('css', '#akawaka-access-denied')?->getText(), $message);
+    }
+
+    /**
      * @Then I should see only the :sections sections in the main menu
      */
     public function iShouldSeeOnlyTheSectionsInTheMainMenu(string $sections): void

@@ -22,9 +22,9 @@ Feature: Restricting the administration contexts by roles
         When I try to open the "sylius_admin_product_index" admin page
         Then I should be granted access
         When I try to open the "sylius_admin_product_create_simple" admin page
-        Then I should be denied access
+        Then I should be told that "You can only view the Catalog section, modifying it is not allowed."
         When I try to open the "sylius_admin_order_index" admin page
-        Then I should be denied access
+        Then I should be told that "You are not allowed to access the Sales section."
         And I should see only the "Catalog" sections in the main menu
 
     @ui
