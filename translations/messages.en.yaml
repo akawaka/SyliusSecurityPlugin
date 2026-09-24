@@ -1,0 +1,14 @@
+akawaka_sylius_security:
+    ui:
+        role:
+            super_admin: Super admin
+            read: Read
+            write: Write
+        write_implies_read: The Write role also grants Read access. Without any role, the administrator only reaches the dashboard and their own account.
+        context:
+            catalog: Catalog
+            sales: Sales
+            customers: Customers
+            marketing: Marketing
+            configuration: Configuration
+            administration: Administration

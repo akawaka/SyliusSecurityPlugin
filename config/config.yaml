@@ -1,0 +1,5 @@
+sylius_ui:
+    events:
+        sylius.admin.admin_user.form.second_column:
+            blocks:
+                roles: '@AkawakaSyliusSecurityPlugin/Admin/AdminUser/Form/_roles.html.twig'

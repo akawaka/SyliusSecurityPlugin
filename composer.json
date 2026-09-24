@@ -1,5 +1,5 @@
 {
-    "name": "akawaka/plugin-skeleton",
+    "name": "akawaka/sylius-security-plugin",
     "type": "sylius-plugin",
     "description": "AKAWAKA Security plugin.",
     "keywords": [
@@ -71,8 +71,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Acme\\SyliusExamplePlugin\\": "src/",
-            "Tests\\Acme\\SyliusExamplePlugin\\": "tests/"
+            "AKAWAKA\\SyliusSecurityPlugin\\": "src/",
+            "Tests\\AKAWAKA\\SyliusSecurityPlugin\\": "tests/"
         }
     },
     "autoload-dev": {

@@ -16,6 +16,7 @@ install:
 backend:
 	tests/Application/bin/console sylius:install --no-interaction
 	tests/Application/bin/console sylius:fixtures:load default --no-interaction
+	tests/Application/bin/console akawaka:security:grant-super-admin sylius@example.com
 
 frontend:
 	(cd tests/Application && yarn install --pure-lockfile)

@@ -2,7 +2,66 @@
 
 <container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
     <services>
-        <service id="Acme\SyliusExamplePlugin\Controller\GreetingController" autowire="true" autoconfigure="true" public="true" />
-        <!-- Put your services here -->
+        <defaults public="false" />
+
+        <service id="akawaka_sylius_security.admin_context_registry" class="AKAWAKA\SyliusSecurityPlugin\Security\AdminContextRegistry">
+            <argument>%akawaka_sylius_security.public_route_prefixes%</argument>
+            <argument>%akawaka_sylius_security.contexts%</argument>
+        </service>
+        <service id="AKAWAKA\SyliusSecurityPlugin\Security\AdminContextRegistryInterface" alias="akawaka_sylius_security.admin_context_registry" />
+
+        <service id="akawaka_sylius_security.admin_context_access_checker" class="AKAWAKA\SyliusSecurityPlugin\Security\AdminContextAccessChecker">
+            <argument>%akawaka_sylius_security.super_admin_role%</argument>
+        </service>
+        <service id="AKAWAKA\SyliusSecurityPlugin\Security\AdminContextAccessCheckerInterface" alias="akawaka_sylius_security.admin_context_access_checker" />
+
+        <service id="akawaka_sylius_security.admin_route_access_checker" class="AKAWAKA\SyliusSecurityPlugin\Security\AdminRouteAccessChecker">
+            <argument type="service" id="akawaka_sylius_security.admin_context_registry" />
+            <argument type="service" id="akawaka_sylius_security.admin_context_access_checker" />
+        </service>
+        <service id="AKAWAKA\SyliusSecurityPlugin\Security\AdminRouteAccessCheckerInterface" alias="akawaka_sylius_security.admin_route_access_checker" />
+
+        <service id="akawaka_sylius_security.admin_role_choices_provider" class="AKAWAKA\SyliusSecurityPlugin\Security\AdminRoleChoicesProvider">
+            <argument type="service" id="akawaka_sylius_security.admin_context_registry" />
+            <argument type="service" id="akawaka_sylius_security.admin_context_access_checker" />
+            <argument>%akawaka_sylius_security.super_admin_role%</argument>
+        </service>
+        <service id="AKAWAKA\SyliusSecurityPlugin\Security\AdminRoleChoicesProviderInterface" alias="akawaka_sylius_security.admin_role_choices_provider" />
+
+        <!-- Runs after the firewall (priority 8) so the token is available -->
+        <service id="akawaka_sylius_security.listener.admin_context_access" class="AKAWAKA\SyliusSecurityPlugin\EventListener\AdminContextAccessListener">
+            <argument type="service" id="security.token_storage" />
+            <argument type="service" id="akawaka_sylius_security.admin_route_access_checker" />
+            <argument>%akawaka_sylius_security.read_route_pattern%</argument>
+            <tag name="kernel.event_listener" event="kernel.request" priority="0" />
+        </service>
+
+        <service id="akawaka_sylius_security.listener.own_account_update_redirect" class="AKAWAKA\SyliusSecurityPlugin\EventListener\OwnAccountUpdateRedirectListener">
+            <argument type="service" id="security.token_storage" />
+            <argument type="service" id="akawaka_sylius_security.admin_route_access_checker" />
+            <argument type="service" id="router" />
+            <tag name="kernel.event_listener" event="sylius.admin_user.post_update" />
+        </service>
+
+        <service id="akawaka_sylius_security.listener.admin_menu" class="AKAWAKA\SyliusSecurityPlugin\Menu\AdminMenuListener">
+            <argument type="service" id="security.token_storage" />
+            <argument type="service" id="akawaka_sylius_security.admin_route_access_checker" />
+            <argument>%akawaka_sylius_security.read_route_pattern%</argument>
+            <tag name="kernel.event_listener" event="sylius.menu.admin.main" priority="-1024" />
+        </service>
+
+        <service id="akawaka_sylius_security.form.extension.admin_user" class="AKAWAKA\SyliusSecurityPlugin\Form\Extension\AdminUserTypeExtension">
+            <argument type="service" id="akawaka_sylius_security.admin_role_choices_provider" />
+            <argument type="service" id="akawaka_sylius_security.admin_route_access_checker" />
+            <argument type="service" id="security.token_storage" />
+            <tag name="form.type_extension" />
+        </service>
+
+        <service id="akawaka_sylius_security.command.grant_super_admin" class="AKAWAKA\SyliusSecurityPlugin\Command\GrantSuperAdminCommand">
+            <argument type="service" id="sylius.repository.admin_user" />
+            <argument type="service" id="sylius.manager.admin_user" />
+            <argument>%akawaka_sylius_security.super_admin_role%</argument>
+            <tag name="console.command" />
+        </service>
     </services>
 </container>

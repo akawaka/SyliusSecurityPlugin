@@ -8,18 +8,74 @@
     </a>
 </p>
 
-<h1 align="center">Plugin Skeleton</h1>
+<h1 align="center">Sylius Security Plugin</h1>
 
-<p align="center">Skeleton for starting Sylius plugins.</p>
+<p align="center">Restricts access to the Sylius administration contexts with administrator roles.</p>
 
-## Documentation
+## Features
 
-For a comprehensive guide on Sylius Plugins development please go to Sylius documentation,
-there you will find the <a href="https://docs.sylius.com/en/latest/plugin-development-guide/index.html">Plugin Development Guide</a>, that is full of examples.
+- Each admin context (Catalog, Sales, Customers, Marketing, Configuration, Administration) is protected by two roles:
+  `ROLE_ADMIN_<CONTEXT>_READ` (index/show pages) and `ROLE_ADMIN_<CONTEXT>_WRITE` (every other action, implies READ).
+- `ROLE_SUPER_ADMIN` grants access to everything.
+- **Deny by default**: an administrator without any context role only reaches the dashboard.
+- Every administrator can still edit their own account ("My account"), without being able to change their own roles
+  unless they have write access to the Administration context.
+- Main menu entries the administrator cannot access are hidden.
+- A roles multi-select replaces the Sylius Plus placeholder on the administrator form.
+  Only super admins can grant `ROLE_SUPER_ADMIN`; roles not managed by the plugin (`ROLE_API_ACCESS`...) are preserved.
 
-## Quickstart Installation
+## Installation
 
-Run `composer create-project sylius/plugin-skeleton ProjectName`.
+1. Require the plugin and register the bundle in `config/bundles.php`:
+
+    ```php
+    AKAWAKA\SyliusSecurityPlugin\AkawakaSyliusSecurityPlugin::class => ['all' => true],
+    ```
+
+1. Import the plugin configuration **after** the Sylius configuration (e.g. at the end of `config/packages/_sylius.yaml`):
+
+    ```yaml
+    imports:
+        - { resource: "@AkawakaSyliusSecurityPlugin/config/config.yaml" }
+    ```
+
+1. Grant the super admin role to at least one administrator, otherwise nobody can manage roles anymore:
+
+    ```bash
+    bin/console akawaka:security:grant-super-admin admin@example.com
+    ```
+
+## Configuration
+
+Admin routes are mapped to contexts by route name prefix; the longest matching prefix wins, public prefixes included.
+Sylius admin routes (`sylius_admin_*`) that are neither public nor mapped are reserved to super admins; other routes
+(e.g. your own admin routes) are not restricted until you map them. Defaults are in `src/DependencyInjection/Configuration.php`:
+configured public prefixes are added to the default ones, and configured contexts are merged with the default ones by code
+(redefining a default context replaces its whole prefix list).
+
+```yaml
+akawaka_sylius_security:
+    super_admin_role: ROLE_SUPER_ADMIN
+    # GET/HEAD requests on matching routes only require the READ role
+    read_route_pattern: '/_(index|show|history|statistics)$/'
+    public_route_prefixes: [app_admin_help]
+    contexts:
+        catalog:
+            route_prefixes: [sylius_admin_product, sylius_admin_taxon, sylius_admin_inventory, app_admin_brand]
+        # a new context gets ROLE_ADMIN_<CODE>_READ / _WRITE roles;
+        # add akawaka_sylius_security.ui.context.<code> to your translations
+        suppliers:
+            route_prefixes: [app_admin_supplier]
+```
+
+### Limitations
+
+- The admin API (`/api/v2/admin`) is not restricted yet.
+- Grid buttons (create, edit, delete) are still displayed to READ-only administrators; the actions themselves are denied.
+
+## Development
+
+### Quickstart Installation
 
 ### Traditional
 
@@ -55,7 +111,7 @@ Run `composer create-project sylius/plugin-skeleton ProjectName`.
 
 3. See your browser `open localhost`
 
-## Usage
+### Usage
 
 ### Running plugin tests
 
