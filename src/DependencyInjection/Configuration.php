@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AKAWAKA\SyliusSecurityPlugin\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -81,36 +82,34 @@ final class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('akawaka_sylius_security');
+        /** @var ArrayNodeDefinition $rootNode */
         $rootNode = $treeBuilder->getRootNode();
+        $children = $rootNode->children();
 
-        $rootNode
-            ->children()
-                ->scalarNode('super_admin_role')
-                    ->defaultValue('ROLE_SUPER_ADMIN')
-                    ->cannotBeEmpty()
-                ->end()
-                ->scalarNode('read_route_pattern')
-                    ->info('Routes matching this pattern and requested with GET/HEAD only require the READ role.')
-                    ->defaultValue('/_(index|show|history|statistics)$/')
-                    ->cannotBeEmpty()
-                ->end()
-                ->arrayNode('public_route_prefixes')
-                    ->info('Admin route prefixes accessible to any administrator, added to the default ones.')
-                    ->scalarPrototype()->end()
-                ->end()
-                ->arrayNode('contexts')
-                    ->info('Admin contexts merged with the default ones by code. The longest matching route prefix (public prefixes included) wins.')
-                    ->useAttributeAsKey('code')
-                    ->arrayPrototype()
-                        ->children()
-                            ->arrayNode('route_prefixes')
-                                ->scalarPrototype()->end()
-                                ->requiresAtLeastOneElement()
-                            ->end()
-                        ->end()
-                    ->end()
-                ->end()
-            ->end()
+        $children->scalarNode('super_admin_role')
+            ->defaultValue('ROLE_SUPER_ADMIN')
+            ->cannotBeEmpty()
+        ;
+
+        $children->scalarNode('read_route_pattern')
+            ->info('Routes matching this pattern and requested with GET/HEAD only require the READ role.')
+            ->defaultValue('/_(index|show|history|statistics)$/')
+            ->cannotBeEmpty()
+        ;
+
+        $children->arrayNode('public_route_prefixes')
+            ->info('Admin route prefixes accessible to any administrator, added to the default ones.')
+            ->scalarPrototype()
+        ;
+
+        $context = $children->arrayNode('contexts')
+            ->info('Admin contexts merged with the default ones by code. The longest matching route prefix (public prefixes included) wins.')
+            ->useAttributeAsKey('code')
+            ->arrayPrototype()
+        ;
+        $context->children()->arrayNode('route_prefixes')
+            ->requiresAtLeastOneElement()
+            ->scalarPrototype()
         ;
 
         return $treeBuilder;
