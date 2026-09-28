@@ -1,14 +1,8 @@
-phpunit:
-	vendor/bin/phpunit
-
 phpspec:
 	vendor/bin/phpspec run --ansi --no-interaction -f dot
 
 phpstan:
 	vendor/bin/phpstan analyse
-
-behat-js:
-	vendor/bin/behat --colors --strict --no-interaction -vvv -f progress
 
 install:
 	composer install --no-interaction --no-scripts
@@ -27,8 +21,8 @@ behat:
 
 init: install backend frontend
 
-ci: init phpstan phpunit phpspec behat
+ci: init phpstan phpspec behat
 
-integration: init phpunit behat
+integration: init behat
 
 static: install phpspec phpstan

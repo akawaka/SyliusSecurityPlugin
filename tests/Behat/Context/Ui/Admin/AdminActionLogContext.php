@@ -99,8 +99,7 @@ final class AdminActionLogContext implements Context
     public function iPurgeTheAdministratorActionLogsOlderThanDays(int $days): void
     {
         $commandTester = new CommandTester($this->purgeAdminActionLogsCommand);
-        $commandTester->execute(['--days' => (string) $days]);
-        $commandTester->assertCommandIsSuccessful();
+        Assert::same($commandTester->execute(['--days' => (string) $days]), Command::SUCCESS);
     }
 
     /**

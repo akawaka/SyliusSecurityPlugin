@@ -1,13 +1,3 @@
-<p align="center">
-    <a href="https://sylius.com" target="_blank">
-        <picture>
-          <source media="(prefers-color-scheme: dark)" srcset="https://media.sylius.com/sylius-logo-800-dark.png">
-          <source media="(prefers-color-scheme: light)" srcset="https://media.sylius.com/sylius-logo-800.png">
-          <img alt="Sylius Logo." src="https://media.sylius.com/sylius-logo-800.png">
-        </picture>
-    </a>
-</p>
-
 <h1 align="center">Sylius Security Plugin</h1>
 
 <p align="center">Restricts access to the Sylius administration contexts with administrator roles.</p>
@@ -34,13 +24,40 @@
 
 ## Installation
 
+1. Add the [Akawaka Flex recipes](https://github.com/akawaka/symfony-recipes) endpoint to your project, then require the plugin:
+
+    ```bash
+    composer config --json extra.symfony.endpoint '["https://api.github.com/repos/akawaka/symfony-recipes/contents/index.json?ref=flex/main","flex://defaults"]'
+    composer require akawaka/sylius-security-plugin
+    ```
+
+    Symfony Flex registers the bundle and creates `config/packages/akawaka_sylius_security.yaml` and
+    `config/routes/akawaka_sylius_security.yaml` (see [Manual installation](#manual-installation-without-flex) for their content).
+
+1. Create the administrator actions table:
+
+    ```bash
+    bin/console doctrine:migrations:migrate
+    ```
+
+1. Grant the super admin role to at least one administrator, otherwise nobody can manage roles anymore:
+
+    ```bash
+    bin/console akawaka:security:grant-super-admin admin@example.com
+    ```
+
+### Manual installation (without Flex)
+
+Replace the first step above with:
+
 1. Require the plugin and register the bundle in `config/bundles.php`:
 
     ```php
     AKAWAKA\SyliusSecurityPlugin\AkawakaSyliusSecurityPlugin::class => ['all' => true],
     ```
 
-1. Import the plugin configuration **after** the Sylius configuration (e.g. at the end of `config/packages/_sylius.yaml`):
+1. Import the plugin configuration **after** the Sylius configuration (e.g. in `config/packages/akawaka_sylius_security.yaml`,
+   loaded after `config/packages/_sylius.yaml`):
 
     ```yaml
     imports:
@@ -53,18 +70,6 @@
     akawaka_sylius_security_admin:
         resource: "@AkawakaSyliusSecurityPlugin/config/routes/admin.yaml"
         prefix: /%sylius_admin.path_name%
-    ```
-
-1. Create the administrator actions table:
-
-    ```bash
-    bin/console doctrine:migrations:migrate
-    ```
-
-1. Grant the super admin role to at least one administrator, otherwise nobody can manage roles anymore:
-
-    ```bash
-    bin/console akawaka:security:grant-super-admin admin@example.com
     ```
 
 ## Configuration
@@ -122,113 +127,31 @@ bin/console akawaka:security:purge-admin-action-logs --days=30
 
 ## Development
 
-### Quickstart Installation
+Requirements: PHP 8.1+, Composer, Node.js with Yarn, the [Symfony CLI](https://symfony.com/download) and Docker (for MySQL and MailHog).
 
-### Traditional
-
-1. From the plugin skeleton root directory, run the following commands:
+1. Start the services and configure the database credentials in `tests/Application/.env.local`
+   (`DATABASE_URL=mysql://root:mysql@127.0.0.1:3306/sylius_%kernel.environment%`):
 
     ```bash
-    $ (cd tests/Application && yarn install)
-    $ (cd tests/Application && yarn build)
-    $ (cd tests/Application && APP_ENV=test bin/console assets:install public)
-
-    $ (cd tests/Application && APP_ENV=test bin/console doctrine:database:create)
-    $ (cd tests/Application && APP_ENV=test bin/console doctrine:schema:create)
-    # Optionally load data fixtures
-    $ (cd tests/Application && APP_ENV=test bin/console sylius:fixtures:load --no-interaction)
+    docker compose up -d
     ```
 
-    To be able to set up a plugin's database, remember to configure your database credentials in `tests/Application/.env` and `tests/Application/.env.test`.
+1. Install the dependencies, the test application database, fixtures and assets (the fixtures administrator
+   `sylius@example.com` is granted `ROLE_SUPER_ADMIN`):
 
-1. Run your local server:
+    ```bash
+    make init
+    ```
 
-      ```bash
-      symfony server:ca:install
-      symfony server:start --dir=tests/Application/public
-      ```
+1. Run the test application:
 
-1. Open your browser and navigate to `https://localhost:8000`.
-
-### Docker
-
-1. Execute `docker compose up -d`
-
-2. Initialize plugin `docker compose exec app make init`
-
-3. See your browser `open localhost`
-
-### Usage
+    ```bash
+    symfony server:start --dir=tests/Application/public
+    ```
 
 ### Running plugin tests
 
-  - PHPUnit
-
-    ```bash
-    vendor/bin/phpunit
-    ```
-
-  - PHPSpec
-
-    ```bash
-    vendor/bin/phpspec run
-    ```
-
-  - Behat (non-JS scenarios)
-
-    ```bash
-    vendor/bin/behat --strict --tags="~@javascript&&~@mink:chromedriver"
-    ```
-
-  - Behat (JS scenarios)
- 
-    1. [Install Symfony CLI command](https://symfony.com/download).
- 
-    2. Start Headless Chrome:
-    
-      ```bash
-      google-chrome-stable --enable-automation --disable-background-networking --no-default-browser-check --no-first-run --disable-popup-blocking --disable-default-apps --allow-insecure-localhost --disable-translate --disable-extensions --no-sandbox --enable-features=Metal --headless --remote-debugging-port=9222 --window-size=2880,1800 --proxy-server='direct://' --proxy-bypass-list='*' http://127.0.0.1
-      ```
-    
-    3. Install SSL certificates (only once needed) and run test application's webserver on `127.0.0.1:8080`:
-    
-      ```bash
-      symfony server:ca:install
-      APP_ENV=test symfony server:start --port=8080 --dir=tests/Application/public --daemon
-      ```
-    
-    4. Run Behat:
-    
-      ```bash
-      vendor/bin/behat --strict --tags="~@javascript&&~@mink:chromedriver"
-      ```
-    
-  - Static Analysis
-      
-    - PHPStan
-    
-      ```bash
-      vendor/bin/phpstan analyse -c phpstan.neon -l max src/  
-      ```
-
-  - Coding Standard
-  
-    ```bash
-    vendor/bin/ecs check
-    ```
-
-### Opening Sylius with your plugin
-
-- Using `test` environment:
-
-    ```bash
-    (cd tests/Application && APP_ENV=test bin/console sylius:fixtures:load)
-    (cd tests/Application && APP_ENV=test bin/console server:run -d public)
-    ```
-    
-- Using `dev` environment:
-
-    ```bash
-    (cd tests/Application && APP_ENV=dev bin/console sylius:fixtures:load)
-    (cd tests/Application && APP_ENV=dev bin/console server:run -d public)
-    ```
+- PHPSpec: `make phpspec`
+- PHPStan: `make phpstan`
+- Behat: `make behat`
+- Coding standard: `vendor/bin/ecs check`
