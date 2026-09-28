@@ -1,3 +1,6 @@
+phpunit:
+	vendor/bin/phpunit
+
 phpspec:
 	vendor/bin/phpspec run --ansi --no-interaction -f dot
 
@@ -21,8 +24,8 @@ behat:
 
 init: install backend frontend
 
-ci: init phpstan phpspec behat
+ci: init phpstan phpspec phpunit behat
 
 integration: init behat
 
-static: install phpspec phpstan
+static: install phpspec phpunit phpstan

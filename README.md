@@ -152,6 +152,7 @@ Requirements: PHP 8.1+, Composer, Node.js with Yarn, the [Symfony CLI](https://s
 ### Running plugin tests
 
 - PHPSpec: `make phpspec`
+- PHPUnit: `make phpunit`
 - PHPStan: `make phpstan`
 - Behat: `make behat`
 - Coding standard: `vendor/bin/ecs check`
