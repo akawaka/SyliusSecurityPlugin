@@ -1,3 +1,14 @@
+<p align="center">
+    <img src="doc/logo-akawaka.png" style="width: 500px;">
+</p>
+
+<p align="center">
+AKAWAKA is a software development company specializing in e-commerce platforms and custom web applications. 
+We help businesses evolve or rebuild their platforms with a pragmatic approach: improving existing solutions or starting from scratch, notably with Sylius. 
+Our team also handles data migration, SEO preservation, and business continuity. 
+With strong expertise in PHP and Symfony, Akawaka builds web solutions tailored to our clients’ business needs.
+</p>
+
 <h1 align="center">Sylius Security Plugin</h1>
 
 <p align="center">Restricts access to the Sylius administration contexts with administrator roles.</p>
