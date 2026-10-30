@@ -1,0 +1,22 @@
+sylius_twig_hooks:
+    hooks:
+        'sylius_admin.admin_action_log.show.content':
+            details:
+                template: '@AkawakaSyliusSecurityPlugin/admin/admin_action_log/show_content.html.twig'
+                priority: 0
+
+        'akawaka_sylius_security.access_denied':
+            sidebar:
+                template: '@SyliusAdmin/shared/crud/common/sidebar.html.twig'
+                priority: 200
+            navbar:
+                template: '@SyliusAdmin/shared/crud/common/navbar.html.twig'
+                priority: 100
+            content:
+                template: '@SyliusAdmin/shared/crud/common/content.html.twig'
+                priority: 0
+
+        'akawaka_sylius_security.access_denied.content':
+            message:
+                template: '@AkawakaSyliusSecurityPlugin/admin/access_denied/message.html.twig'
+                priority: 0

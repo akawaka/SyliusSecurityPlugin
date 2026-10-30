@@ -1,0 +1,28 @@
+{% set access_context = hookable_metadata.context.access_context %}
+{% set access_can_read = hookable_metadata.context.access_can_read %}
+
+<div class="page-body">
+    <div class="container-xl">
+        <div class="empty" id="akawaka-access-denied">
+            <div class="empty-icon">{{ ux_icon('tabler:lock', {class: 'icon icon-lg'}) }}</div>
+            <p class="empty-title">{{ 'akawaka_sylius_security.access_denied.title'|trans }}</p>
+            <p class="empty-subtitle text-secondary">
+                {% if access_context is null %}
+                    {{ 'akawaka_sylius_security.access_denied.super_admin_only'|trans }}
+                {% else %}
+                    {{ (access_can_read ? 'akawaka_sylius_security.access_denied.write' : 'akawaka_sylius_security.access_denied.read')|trans({
+                        '%context%': ('akawaka_sylius_security.ui.context.' ~ access_context.code)|trans,
+                    }) }}
+                {% endif %}
+                <br>
+                {{ 'akawaka_sylius_security.access_denied.contact'|trans }}
+            </p>
+            <div class="empty-action">
+                <a href="{{ path('sylius_admin_dashboard') }}" class="btn btn-primary">
+                    {{ ux_icon('tabler:home', {class: 'icon'}) }}
+                    {{ 'akawaka_sylius_security.access_denied.back_to_dashboard'|trans }}
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

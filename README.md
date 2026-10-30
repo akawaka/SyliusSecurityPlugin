@@ -13,6 +13,13 @@ With strong expertise in PHP and Symfony, Akawaka builds web solutions tailored 
 
 <p align="center">Restricts access to the Sylius administration contexts with administrator roles.</p>
 
+## Compatibility
+
+| Plugin | Sylius | PHP   |
+|--------|--------|-------|
+| 2.x    | ^2.0   | ^8.2  |
+| 1.x    | ~1.14  | ^8.1  |
+
 ## Features
 
 - Each admin context (Catalog, Sales, Customers, Marketing, Configuration, Administration) is protected by two roles:
@@ -138,32 +145,15 @@ bin/console akawaka:security:purge-admin-action-logs --days=30
 
 ## Development
 
-Requirements: PHP 8.1+, Composer, Node.js with Yarn, the [Symfony CLI](https://symfony.com/download) and Docker (for MySQL and MailHog).
+```bash
+make init            # start the containers (PHP, MySQL, nginx, mailhog) and install dependencies
+make database-init   # create the test application database, run migrations and load the Sylius fixtures
+make frontend        # build the assets of the test application (only to browse it)
+make test            # ECS, PHPStan (level max), PHPUnit
+```
 
-1. Start the services and configure the database credentials in `tests/Application/.env.local`
-   (`DATABASE_URL=mysql://root:mysql@127.0.0.1:3306/sylius_%kernel.environment%`):
+Project run at [http://plugin.localhost](http://plugin.localhost)
 
-    ```bash
-    docker compose up -d
-    ```
+## License
 
-1. Install the dependencies, the test application database, fixtures and assets (the fixtures administrator
-   `sylius@example.com` is granted `ROLE_SUPER_ADMIN`):
-
-    ```bash
-    make init
-    ```
-
-1. Run the test application:
-
-    ```bash
-    symfony server:start --dir=tests/Application/public
-    ```
-
-### Running plugin tests
-
-- PHPSpec: `make phpspec`
-- PHPUnit: `make phpunit`
-- PHPStan: `make phpstan`
-- Behat: `make behat`
-- Coding standard: `vendor/bin/ecs check`
+MIT.

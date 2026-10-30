@@ -1,0 +1,27 @@
+sylius_twig_hooks:
+    hooks:
+        # The default "roles" section is a Sylius Plus placeholder: replaced by the roles managed by the plugin
+        'sylius_admin.admin_user.create.content.form.sections#left':
+            roles:
+                template: '@AkawakaSyliusSecurityPlugin/admin/admin_user/form/roles.html.twig'
+                priority: -100
+
+        'sylius_admin.admin_user.update.content.form.sections#left':
+            roles:
+                template: '@AkawakaSyliusSecurityPlugin/admin/admin_user/form/roles.html.twig'
+                priority: -100
+
+        'sylius_admin.admin_user.create.content.form.sections.account':
+            password:
+                template: '@AkawakaSyliusSecurityPlugin/admin/admin_user/form/password.html.twig'
+                priority: 100
+
+        'sylius_admin.admin_user.update.content.form.sections.account':
+            password:
+                template: '@AkawakaSyliusSecurityPlugin/admin/admin_user/form/password.html.twig'
+                priority: 100
+
+        'sylius_admin.admin_user.update.content':
+            request_password_reset_form:
+                template: '@AkawakaSyliusSecurityPlugin/admin/admin_user/update/request_password_reset_form.html.twig'
+                priority: -50

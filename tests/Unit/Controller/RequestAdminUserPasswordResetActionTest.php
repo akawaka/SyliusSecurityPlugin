@@ -6,7 +6,7 @@ namespace Tests\AKAWAKA\SyliusSecurityPlugin\Unit\Controller;
 
 use AKAWAKA\SyliusSecurityPlugin\Controller\RequestAdminUserPasswordResetAction;
 use PHPUnit\Framework\TestCase;
-use Sylius\Bundle\CoreBundle\Message\Admin\Account\RequestResetPasswordEmail;
+use Sylius\Bundle\CoreBundle\Command\Admin\Account\RequestResetPasswordEmail;
 use Sylius\Component\User\Repository\UserRepositoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;

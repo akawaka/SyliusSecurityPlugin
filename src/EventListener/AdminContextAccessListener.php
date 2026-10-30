@@ -57,7 +57,7 @@ final class AdminContextAccessListener
         }
 
         $event->setResponse(new Response(
-            $this->twig->render('@AkawakaSyliusSecurityPlugin/Admin/accessDenied.html.twig', [
+            $this->twig->render('@AkawakaSyliusSecurityPlugin/admin/access_denied.html.twig', [
                 'context' => $this->contextRegistry->resolveByRoute($route),
                 'can_read' => !$readOnly && $this->routeAccessChecker->isGranted($user, $route, true),
             ]),

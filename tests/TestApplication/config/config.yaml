@@ -1,0 +1,11 @@
+imports:
+    - { resource: "@AkawakaSyliusSecurityPlugin/config/config.yaml" }
+    - { resource: "services_test.php" }
+
+akawaka_sylius_security:
+    roles:
+        ROLE_API_ACCESS: akawaka_sylius_security.ui.role.api_access
+
+twig:
+    paths:
+        '%kernel.project_dir%/../../../tests/TestApplication/templates': ~

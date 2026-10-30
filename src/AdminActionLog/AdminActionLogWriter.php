@@ -36,7 +36,11 @@ final class AdminActionLogWriter implements AdminActionLogWriterInterface
 
                 $column = $connection->quoteIdentifier($metadata->getColumnName($field));
                 $data[$column] = $metadata->getFieldValue($log, $field);
-                $types[$column] = $metadata->getTypeOfField($field);
+
+                $type = $metadata->getTypeOfField($field);
+                if (null !== $type) {
+                    $types[$column] = $type;
+                }
             }
 
             foreach ($metadata->getAssociationNames() as $association) {

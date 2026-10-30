@@ -1,8 +1,16 @@
 parameters:
     level: max
+    reportUnmatchedIgnoredErrors: false
     paths:
         - src
         - tests/Behat
+
+    excludePaths:
+        # Makes PHPStan crash
+        - 'src/DependencyInjection/Configuration.php'
+
+        # Test dependencies
+        - 'tests/TestApplication/src/**.php'
 
     ignoreErrors:
         - identifier: missingType.iterableValue

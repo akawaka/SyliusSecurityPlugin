@@ -137,7 +137,7 @@ final class AdminContextAccessListenerTest extends TestCase
             $routeAccessChecker ?? new AdminRouteAccessChecker($contextRegistry, new AdminContextAccessChecker('ROLE_SUPER_ADMIN')),
             $contextRegistry,
             new Environment(new ArrayLoader([
-                '@AkawakaSyliusSecurityPlugin/Admin/accessDenied.html.twig' => 'context={{ context.code }} can_read={{ can_read ? "yes" : "no" }}',
+                '@AkawakaSyliusSecurityPlugin/admin/access_denied.html.twig' => 'context={{ context.code }} can_read={{ can_read ? "yes" : "no" }}',
             ])),
             self::READ_ROUTE_PATTERN,
         );

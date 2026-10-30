@@ -6,15 +6,15 @@ namespace AKAWAKA\SyliusSecurityPlugin\DependencyInjection;
 
 use AKAWAKA\SyliusSecurityPlugin\Security\AdminContext;
 use Sylius\Bundle\CoreBundle\DependencyInjection\PrependDoctrineMigrationsTrait;
-use Sylius\Bundle\ResourceBundle\DependencyInjection\Extension\AbstractResourceExtension;
 use Sylius\Component\Core\Model\AdminUserInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\XmlFileLoader;
 
-final class AkawakaSyliusSecurityExtension extends AbstractResourceExtension implements PrependExtensionInterface
+final class AkawakaSyliusSecurityExtension extends Extension implements PrependExtensionInterface
 {
     use PrependDoctrineMigrationsTrait;
 

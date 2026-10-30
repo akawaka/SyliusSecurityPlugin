@@ -26,7 +26,7 @@ final class AdminActionLogMenuListener
                 ]],
             ])
             ->setLabel('akawaka_sylius_security.ui.admin_action_logs')
-            ->setLabelAttribute('icon', 'history')
+            ->setLabelAttribute('icon', 'tabler:history')
         ;
     }
 }

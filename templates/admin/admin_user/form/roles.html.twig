@@ -1,0 +1,56 @@
+{% set form = hookable_metadata.context.form %}
+
+{% if form.securityRoles is defined %}
+    {% set rolesForm = form.securityRoles %}
+    {% set checkboxes = {} %}
+    {% for child in rolesForm %}
+        {% set checkboxes = checkboxes|merge({(child.vars.value): child}) %}
+    {% endfor %}
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <div class="card-title">{{ 'sylius.ui.roles'|trans }}</div>
+        </div>
+        <div class="card-body">
+            {{ form_errors(rolesForm) }}
+
+            {% for choice in rolesForm.vars.choices %}
+                {% if choice.choices is not defined %}
+                    <div class="mb-3 form-check form-switch">
+                        {{ form_widget(checkboxes[choice.value], {'attr': {'class': 'form-check-input'}}) }}
+                        {{ form_label(checkboxes[choice.value], null, {'label_attr': {'class': 'form-check-label'}}) }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <table class="table table-sm" id="akawaka-admin-roles">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="text-center w-1">{{ 'akawaka_sylius_security.ui.role.read'|trans }}</th>
+                        <th class="text-center w-1">{{ 'akawaka_sylius_security.ui.role.write'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group in rolesForm.vars.choices %}
+                        {% if group.choices is defined %}
+                            <tr>
+                                <td>{{ group.label|trans }}</td>
+                                {% for choice in group.choices %}
+                                    {% set checkbox = checkboxes[choice.value] %}
+                                    <td class="text-center">
+                                        {{ form_widget(checkbox, {'attr': {'class': 'form-check-input', 'aria-label': group.label|trans ~ ' - ' ~ choice.label|trans}}) }}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="alert alert-info mb-0">{{ 'akawaka_sylius_security.ui.write_implies_read'|trans }}</div>
+
+            {% do rolesForm.setRendered %}
+        </div>
+    </div>
+{% endif %}

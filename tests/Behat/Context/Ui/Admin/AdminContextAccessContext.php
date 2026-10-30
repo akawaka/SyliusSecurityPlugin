@@ -19,7 +19,10 @@ use Webmozart\Assert\Assert;
 
 final class AdminContextAccessContext implements Context
 {
-    /** @param UserRepositoryInterface<AdminUserInterface> $adminUserRepository */
+    /**
+     * @param ExampleFactoryInterface<AdminUserInterface> $adminUserFactory
+     * @param UserRepositoryInterface<AdminUserInterface> $adminUserRepository
+     */
     public function __construct(
         private readonly Session $session,
         private readonly MinkParameters $minkParameters,
@@ -89,8 +92,8 @@ final class AdminContextAccessContext implements Context
     public function iChangeMyFirstNameAndSave(string $firstName): void
     {
         $page = $this->session->getPage();
-        $page->fillField('sylius_admin_user_firstName', $firstName);
-        $page->pressButton('sylius_save_changes_button');
+        $page->fillField('sylius_admin_admin_user_firstName', $firstName);
+        $page->pressButton('Update');
     }
 
     /**
@@ -99,7 +102,7 @@ final class AdminContextAccessContext implements Context
     public function iShouldNotBeAbleToChangeRoles(): void
     {
         Assert::same($this->session->getStatusCode(), 200);
-        Assert::null($this->session->getPage()->find('css', 'input[name^="sylius_admin_user[securityRoles]"]'));
+        Assert::null($this->session->getPage()->find('css', 'input[name^="sylius_admin_admin_user[securityRoles]"]'));
     }
 
     /**
@@ -142,7 +145,7 @@ final class AdminContextAccessContext implements Context
      */
     public function iShouldBeAbleToChangeThePassword(): void
     {
-        Assert::notNull($this->session->getPage()->findField('sylius_admin_user_plainPassword'));
+        Assert::notNull($this->session->getPage()->findField('sylius_admin_admin_user_plainPassword'));
         Assert::null($this->session->getPage()->findButton('akawaka-request-password-reset-button'));
     }
 
@@ -152,7 +155,7 @@ final class AdminContextAccessContext implements Context
     public function iShouldNotBeAbleToChangeThePasswordButOnlyRequestAReset(): void
     {
         Assert::same($this->session->getStatusCode(), 200);
-        Assert::null($this->session->getPage()->findField('sylius_admin_user_plainPassword'));
+        Assert::null($this->session->getPage()->findField('sylius_admin_admin_user_plainPassword'));
         Assert::notNull($this->session->getPage()->findButton('akawaka-request-password-reset-button'));
     }
 
@@ -162,7 +165,7 @@ final class AdminContextAccessContext implements Context
     public function iShouldBeNotifiedThatThePasswordResetEmailHasBeenSent(): void
     {
         Assert::contains(
-            (string) $this->session->getPage()->find('css', '.sylius-flash-message')?->getText(),
+            (string) $this->session->getPage()->find('css', '[data-test-sylius-flash-message]')?->getText(),
             'The password reset email has been sent.',
         );
     }
@@ -179,11 +182,11 @@ final class AdminContextAccessContext implements Context
 
         $page = $this->session->getPage();
         foreach ($this->parseRoles($roles) as $role) {
-            $checkbox = $page->find('css', sprintf('input[name="sylius_admin_user[securityRoles][]"][value="%s"]', $role));
+            $checkbox = $page->find('css', sprintf('input[name="sylius_admin_admin_user[securityRoles][]"][value="%s"]', $role));
             Assert::notNull($checkbox, sprintf('The "%s" role checkbox should be displayed.', $role));
             $checkbox->check();
         }
-        $page->pressButton('sylius_save_changes_button');
+        $page->pressButton('Update');
     }
 
     /**
@@ -198,12 +201,12 @@ final class AdminContextAccessContext implements Context
 
         $page = $this->session->getPage();
         foreach ($this->parseRoles($roles) as $role) {
-            $checkbox = $page->find('css', sprintf('input[name="sylius_admin_user[securityRoles][]"][value="%s"]', $role));
+            $checkbox = $page->find('css', sprintf('input[name="sylius_admin_admin_user[securityRoles][]"][value="%s"]', $role));
             Assert::notNull($checkbox, sprintf('The "%s" role checkbox should be displayed.', $role));
             Assert::true($checkbox->isChecked(), sprintf('The "%s" role checkbox should be checked.', $role));
             $checkbox->uncheck();
         }
-        $page->pressButton('sylius_save_changes_button');
+        $page->pressButton('Update');
     }
 
     /**
@@ -254,7 +257,7 @@ final class AdminContextAccessContext implements Context
 
         $headers = array_map(
             static fn (NodeElement $header): string => trim($header->getText()),
-            $this->session->getPage()->findAll('css', '.admin-layout__sidebar .header'),
+            $this->session->getPage()->findAll('css', '.sidebar > .nav-item > .dropdown-toggle .nav-link-title'),
         );
         $headers = array_values(array_diff($headers, ['Official support']));
 

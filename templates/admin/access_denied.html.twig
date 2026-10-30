@@ -1,0 +1,7 @@
+{% extends '@SyliusAdmin/shared/layout/base.html.twig' %}
+
+{% block title %}{{ 'akawaka_sylius_security.access_denied.title'|trans }} | {{ parent() }}{% endblock %}
+
+{% block body %}
+    {% hook 'akawaka_sylius_security.access_denied' with { access_context: context, access_can_read: can_read } %}
+{% endblock %}

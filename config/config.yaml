@@ -1,18 +1,5 @@
-sylius_ui:
-    events:
-        sylius.admin.admin_user.form.first_column:
-            blocks:
-                general_info_extended: '@AkawakaSyliusSecurityPlugin/Admin/AdminUser/Form/_generalInfoExtended.html.twig'
-
-        sylius.admin.admin_user.form.second_column:
-            blocks:
-                roles: '@AkawakaSyliusSecurityPlugin/Admin/AdminUser/Form/_roles.html.twig'
-
-        sylius.admin.admin_user.update:
-            blocks:
-                request_password_reset_form:
-                    template: '@AkawakaSyliusSecurityPlugin/Admin/AdminUser/Update/_requestPasswordResetForm.html.twig'
-                    priority: 7
+imports:
+    - { resource: "twig_hooks/**/*.yaml" }
 
 sylius_resource:
     resources:
@@ -49,13 +36,13 @@ sylius_grid:
                     label: akawaka_sylius_security.ui.admin_action_log.type
                     sortable: ~
                     options:
-                        template: '@AkawakaSyliusSecurityPlugin/Admin/AdminActionLog/Grid/Field/type.html.twig'
+                        template: '@AkawakaSyliusSecurityPlugin/admin/admin_action_log/grid/field/type.html.twig'
                 context:
                     type: twig
                     label: akawaka_sylius_security.ui.admin_action_log.context
                     sortable: ~
                     options:
-                        template: '@AkawakaSyliusSecurityPlugin/Admin/AdminActionLog/Grid/Field/context.html.twig'
+                        template: '@AkawakaSyliusSecurityPlugin/admin/admin_action_log/grid/field/context.html.twig'
                 route:
                     type: string
                     label: akawaka_sylius_security.ui.admin_action_log.route

@@ -11,25 +11,12 @@ akawaka_sylius_security_admin_admin_action_log:
         alias: akawaka_sylius_security.admin_action_log
         section: admin
         path: admin-action-logs
-        templates: "@SyliusAdmin\\Crud"
-        only: ['index']
+        templates: "@SyliusAdmin\\shared\\crud"
+        only: ['index', 'show']
         grid: akawaka_sylius_security_admin_admin_action_log
         permission: true
         vars:
             index:
-                icon: history
-                header: akawaka_sylius_security.ui.admin_action_logs
+                icon: tabler:history
                 subheader: akawaka_sylius_security.ui.admin_action_log.subheader
     type: sylius.resource
-
-akawaka_sylius_security_admin_admin_action_log_show:
-    path: /admin-action-logs/{id}
-    methods: [GET]
-    requirements:
-        id: \d+
-    defaults:
-        _controller: akawaka_sylius_security.controller.admin_action_log::showAction
-        _sylius:
-            section: admin
-            permission: true
-            template: '@AkawakaSyliusSecurityPlugin/Admin/AdminActionLog/show.html.twig'

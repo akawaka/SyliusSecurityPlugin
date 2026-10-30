@@ -1,31 +1,43 @@
-phpunit:
-	vendor/bin/phpunit
+.DEFAULT_GOAL := help
+COMPOSE = docker compose
+PHP = $(COMPOSE) exec php
 
-phpspec:
-	vendor/bin/phpspec run --ansi --no-interaction -f dot
+help: ## Show this help
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  %-18s %s\n", $$1, $$2}'
 
-phpstan:
-	vendor/bin/phpstan analyse
+init: ## Copy the compose override, start containers and install dependencies
+	@test -f compose.override.yml || cp compose.override.dist.yml compose.override.yml
+	$(COMPOSE) up -d --wait
+	$(PHP) composer install
 
-install:
-	composer install --no-interaction --no-scripts
+up: ## Start containers
+	$(COMPOSE) up -d
 
-backend:
-	tests/Application/bin/console sylius:install --no-interaction
-	tests/Application/bin/console sylius:fixtures:load default --no-interaction
-	tests/Application/bin/console akawaka:security:grant-super-admin sylius@example.com
+down: ## Stop containers
+	$(COMPOSE) down
 
-frontend:
-	(cd tests/Application && yarn install --pure-lockfile)
-	(cd tests/Application && yarn build)
+php-shell: ## Open a shell in the php container
+	$(PHP) sh
 
-behat:
-	vendor/bin/behat --colors --strict --no-interaction -vvv -f progress
+database-init: ## (Re)create the test application database and run migrations
+	$(PHP) vendor/bin/console doctrine:database:drop --force --if-exists
+	$(PHP) vendor/bin/console doctrine:database:create
+	$(PHP) vendor/bin/console doctrine:migrations:migrate -n
+	$(PHP) vendor/bin/console sylius:fixtures:load -n
 
-init: install backend frontend
+frontend: ## Build the admin and shop assets of the test application (needed to open it in a browser)
+	$(COMPOSE) run --rm nodejs
+	$(PHP) vendor/bin/console assets:install vendor/sylius/test-application/public
 
-ci: init phpstan phpspec phpunit behat
+test: ecs phpstan phpunit ## Run every check
 
-integration: init behat
+ecs: ## Check coding standards
+	$(PHP) vendor/bin/ecs check
 
-static: install phpspec phpunit phpstan
+phpstan: ## Static analysis
+	$(PHP) vendor/bin/phpstan analyse -c phpstan.neon --no-progress
+
+phpunit: ## Unit and integration tests
+	$(PHP) vendor/bin/phpunit
+
+.PHONY: help init up down php-shell database-init frontend test ecs phpstan phpunit

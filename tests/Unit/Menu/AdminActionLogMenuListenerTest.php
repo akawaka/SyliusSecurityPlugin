@@ -22,7 +22,7 @@ final class AdminActionLogMenuListenerTest extends TestCase
         $item = $menu->getChild('configuration')?->getChild('akawaka_admin_action_logs');
         self::assertNotNull($item);
         self::assertSame('akawaka_sylius_security.ui.admin_action_logs', $item->getLabel());
-        self::assertSame('history', $item->getLabelAttribute('icon'));
+        self::assertSame('tabler:history', $item->getLabelAttribute('icon'));
         self::assertSame(
             [['route' => 'akawaka_sylius_security_admin_admin_action_log_show']],
             $item->getExtra('routes'),

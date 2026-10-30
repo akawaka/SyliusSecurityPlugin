@@ -1,4 +1,0 @@
-suites:
-    main:
-        namespace: AKAWAKA\SyliusSecurityPlugin
-        psr4_prefix: AKAWAKA\SyliusSecurityPlugin

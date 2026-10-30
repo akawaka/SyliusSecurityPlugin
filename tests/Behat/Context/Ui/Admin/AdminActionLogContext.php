@@ -60,7 +60,7 @@ final class AdminActionLogContext implements Context
      */
     public function iGoToThePageOfTheAdministratorActions(int $page): void
     {
-        $this->session->getPage()->find('css', '.sylius-grid-nav__pagination')?->clickLink((string) $page);
+        $this->session->getPage()->find('css', '.pagination')?->clickLink((string) $page);
     }
 
     /**
@@ -77,7 +77,7 @@ final class AdminActionLogContext implements Context
      */
     public function iShouldSeeThePaginationOfTheAdministratorActions(): void
     {
-        Assert::notNull($this->session->getPage()->find('css', '.sylius-grid-nav__pagination .pagination'));
+        Assert::notNull($this->session->getPage()->find('css', '.pagination'));
     }
 
     /**

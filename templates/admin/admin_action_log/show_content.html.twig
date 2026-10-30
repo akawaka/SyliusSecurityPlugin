@@ -1,0 +1,72 @@
+{% set log = hookable_metadata.context.resource %}
+{% set prefix = 'akawaka_sylius_security.ui.admin_action_log.' %}
+
+<div class="page-body">
+    <div class="container-xl">
+        <div class="card" id="akawaka-admin-action-log">
+            <div class="card-header">
+                <div class="card-title">{{ 'akawaka_sylius_security.ui.admin_action_log.header'|trans({'%id%': log.id}) }}</div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-vcenter card-table">
+                    <tbody>
+                        <tr>
+                            <th class="w-25">{{ (prefix ~ 'created_at')|trans }}</th>
+                            <td>{{ log.createdAt|date('d-m-Y H:i:s') }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ (prefix ~ 'type')|trans }}</th>
+                            <td>{% include '@AkawakaSyliusSecurityPlugin/admin/admin_action_log/grid/field/type.html.twig' with {data: log.type} only %}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ (prefix ~ 'admin')|trans }}</th>
+                            <td>
+                                {% if log.adminUser is not null %}
+                                    <a href="{{ path('sylius_admin_admin_user_update', {id: log.adminUser.id}) }}">{{ log.adminEmail }}</a>
+                                {% else %}
+                                    {{ log.adminEmail }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{ (prefix ~ 'context')|trans }}</th>
+                            <td>{% include '@AkawakaSyliusSecurityPlugin/admin/admin_action_log/grid/field/context.html.twig' with {data: log.context} only %}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ (prefix ~ 'route')|trans }}</th>
+                            <td><code>{{ log.route }}</code></td>
+                        </tr>
+                        <tr>
+                            <th>{{ (prefix ~ 'route_parameters')|trans }}</th>
+                            <td>
+                                {% for name, value in log.routeParameters %}
+                                    <div><code>{{ name }}</code>: {{ value is iterable ? value|json_encode : value }}</div>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{{ (prefix ~ 'method')|trans }}</th>
+                            <td>{{ log.method }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ (prefix ~ 'uri')|trans }}</th>
+                            <td class="text-break"><code>{{ log.uri }}</code></td>
+                        </tr>
+                        <tr>
+                            <th>{{ (prefix ~ 'status_code')|trans }}</th>
+                            <td>{{ log.statusCode }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ (prefix ~ 'ip')|trans }}</th>
+                            <td>{{ log.ip }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ (prefix ~ 'user_agent')|trans }}</th>
+                            <td>{{ log.userAgent }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,2 @@
+{% set colors = {read: 'secondary', write: 'orange', login: 'green', login_failure: 'red', logout: 'lime'} %}
+<span class="badge bg-{{ colors[data]|default('secondary') }}-lt">{{ ('akawaka_sylius_security.ui.admin_action_log.types.' ~ data)|trans }}</span>
