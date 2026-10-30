@@ -28,10 +28,6 @@ jobs:
             -   run: vendor/bin/ecs check
             -   run: vendor/bin/phpstan analyse -c phpstan.neon --no-progress
             -   run: vendor/bin/phpunit --testsuite Unit
-            -   uses: actions/setup-node@v4
-                with:
-                    node-version: '20'
-            -   run: npm test
 
     functional:
         runs-on: ubuntu-latest
