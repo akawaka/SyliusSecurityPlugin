@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="doc/logo-akawaka.png" style="width: 500px;">
+    <img src="docs/logo-akawaka.png" style="width: 500px;">
 </p>
 
 <p align="center">
